@@ -14,8 +14,11 @@ Source file (Version from 2024-10-04):
   https://github.com/telekom-mms/Automated-Ansible-Role-Documentation/blob/8616eb5613a0f17f76573c6922751eb1d991286f/aar_doc/templates/markdown.j2
 -#}
 <!-- BEGIN_ANSIBLE_DOCS -->
+{% macro opt_info(details) -%}
+Type: `{{ details.display_type }}`, {{ "**required**" if details.required else ("Default: `" ~ details.display_default ~ "`" if details.display_default else "optional") }}
+{%- endmacro -%}
 {% macro opt(name, details) -%}
-- {{ "**" if details.required }}`{{ name }}`{{ "**" if details.required }} (Type: `{{ details.display_type }}`, {{ "**required**" if details.required else ("Default: `" ~ details.display_default ~ "`" if details.display_default else "optional") }}).
+- {{ "**" if details.required }}`{{ name }}`{{ "**" if details.required }} ({{ opt_info(details) }}).
 
 {{ details.display_description }}
 {%- if details.choices %}
@@ -67,7 +70,7 @@ None.
 {%- for name, details in options.items() %}
 #### `{{ name }}`
 
-Type: `{{ details.display_type }}`, {{ "**required**" if details.required else ("Default: `" ~ details.display_default ~ "`" if details.display_default else "*optional*") }}.
+{{ opt_info(details) }}.
 
 {{ details.display_description }}
 {%- if details.choices %}
