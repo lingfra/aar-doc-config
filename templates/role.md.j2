@@ -28,10 +28,12 @@ Type: `{{ details.display_type }}`, {{ "**required**" if details.required else (
 - `{{ choice }}`
 {%- endfor -%}
 {% endif %}
-{% if details.options %}
+{%- if details.options %}
+
 **Options:**
-{% for name, sub_details in details.options.items() %}
-  {{ opt(name, sub_details) | indent(4) }}
+{%- for name, sub_details in details.options.items() %}
+
+{{ opt(name, sub_details) | indent(2) }}
 {%- endfor -%}
 {% endif %}
 {%- endmacro -%}
@@ -52,22 +54,20 @@ None.
 ## Role Arguments
 {% for entrypoint in argument_specs.keys() %}
 ### Entrypoint `{{ entrypoint }}` - {{ argument_specs[entrypoint].short_description }}
-
 {% if "description" in argument_specs[entrypoint] %}
 {%- if argument_specs[entrypoint].description is string %}
 
 {{ argument_specs[entrypoint].description }}
 {% else %}
-
-{%- for line in argument_specs[entrypoint].description -%}
+{%- for line in argument_specs[entrypoint].description %}
 {{ line }}
-{% endfor -%}
+{%- endfor -%}
 {% endif -%}
 {% endif -%}
 {% if entrypoint_options[entrypoint] %}
-
 {%- set path, options=entrypoint_options[entrypoint][0] -%}
-{%- for name, details in options.items() %}
+{% for name, details in options.items() %}
+
 #### `{{ name }}`
 
 {{ opt_info(details) }}.
@@ -79,20 +79,23 @@ None.
 {% for choice in details.choices %}
 - `{{ choice }}`
 {%- endfor -%}
-{% endif %}
-{% if details.options %}
+{% endif -%}
+{%- if details.options %}
+
 **Options:**
-{% for name, sub_details in details.options.items() %}
+{%- for name, sub_details in details.options.items() %}
+
 {{ opt(name, sub_details) | indent(2) }}
 {%- endfor -%}
-{% endif %}
+{% endif -%}
 {% endfor -%}
 {% else -%}
 
 This entrypoint has no options.
 
 {% endif -%}
-{% endfor -%}
+{%- endfor %}
+
 ## Dependencies
 {% if ("dependencies" in metadata) and (metadata.dependencies | length > 0) %}
 {%- for dependency in metadata.dependencies %}
