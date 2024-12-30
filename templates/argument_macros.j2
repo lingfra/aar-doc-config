@@ -1,0 +1,74 @@
+{% macro opt_info(details) -%}
+Type: `{{ details.display_type }}`, {{ "**required**" if details.required else ("Default: `" ~ details.display_default ~ "`" if details.display_default else "optional") }}
+{%- endmacro -%}
+{% macro opt_nested(name, details) -%}
+- {{ "**" if details.required }}`{{ name }}`{{ "**" if details.required }} ({{ opt_info(details) }}).
+
+{{ details.display_description }}
+{%- if details.choices %}
+
+**Choices:**
+{% for choice in details.choices %}
+- `{{ choice }}`
+{%- endfor -%}
+{% endif %}
+{%- if details.options %}
+
+**Options:**
+{%- for name, sub_details in details.options.items() %}
+
+{{ opt_nested(name, sub_details) | indent(2) }}
+{%- endfor -%}
+{% endif %}
+{%- endmacro -%}
+{% macro opt_top_level(name, options) -%}
+{% for name, details in options.items() %}
+
+#### `{{ name }}`
+
+{{ opt_info(details) }}.
+
+{{ details.display_description }}
+{%- if details.choices %}
+
+**Choices:**
+{% for choice in details.choices %}
+- `{{ choice }}`
+{%- endfor -%}
+{% endif -%}
+{%- if details.options %}
+
+**Options:**
+{%- for name, sub_details in details.options.items() %}
+
+{{ opt_nested(name, sub_details) | indent(2) }}
+{%- endfor -%}
+{% endif -%}
+{% endfor -%}
+{%- endmacro -%}
+{% macro entrypoint_macro(argument_specs, entrypoint, entrypoint_options) -%}
+### Entrypoint `{{ entrypoint }}` - {{ argument_specs[entrypoint].short_description }}
+{% if "description" in argument_specs[entrypoint] %}
+{%- if argument_specs[entrypoint].description is string %}
+
+{{ argument_specs[entrypoint].description }}
+{% else %}
+{%- for line in argument_specs[entrypoint].description %}
+{{ line }}
+{%- endfor -%}
+{% endif -%}
+{% endif -%}
+{% if entrypoint_options[entrypoint] %}
+{%- set path, options=entrypoint_options[entrypoint][0] -%}
+{{ opt_top_level(name, options) }}
+{% else -%}
+
+This entrypoint has no options.
+
+{% endif -%}
+{%- endmacro -%}
+{% macro role_arguments_macro(argument_specs, entrypoint_options) -%}
+{% for entrypoint in argument_specs.keys() %}
+{{ entrypoint_macro(argument_specs, entrypoint, entrypoint_options) }}
+{%- endfor %}
+{%- endmacro -%}
