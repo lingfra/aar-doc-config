@@ -37,35 +37,7 @@ Type: `{{ details.display_type }}`, {{ "**required**" if details.required else (
 {%- endfor -%}
 {% endif %}
 {%- endmacro -%}
-# Ansible Role: {{ role }}
-
-{{ metadata.galaxy_info.description }}
-
-## Requirements
-{% if metadata.galaxy_info.platforms | length > 0 %}
-| Platform | Versions |
-| -------- | -------- |
-{%- for platform in metadata.galaxy_info.platforms %}
-| {{ platform.name }} | {{ platform.versions | default([]) | join(', ') }} |
-{%- endfor %}
-{% else %}
-None.
-{% endif %}
-## Role Arguments
-{% for entrypoint in argument_specs.keys() %}
-### Entrypoint `{{ entrypoint }}` - {{ argument_specs[entrypoint].short_description }}
-{% if "description" in argument_specs[entrypoint] %}
-{%- if argument_specs[entrypoint].description is string %}
-
-{{ argument_specs[entrypoint].description }}
-{% else %}
-{%- for line in argument_specs[entrypoint].description %}
-{{ line }}
-{%- endfor -%}
-{% endif -%}
-{% endif -%}
-{% if entrypoint_options[entrypoint] %}
-{%- set path, options=entrypoint_options[entrypoint][0] -%}
+{% macro opt_top_level(name, options) -%}
 {% for name, details in options.items() %}
 
 #### `{{ name }}`
@@ -89,12 +61,49 @@ None.
 {%- endfor -%}
 {% endif -%}
 {% endfor -%}
+{%- endmacro -%}
+{% macro entrypoint_macro(argument_specs, entrypoint, entrypoint_options) -%}
+### Entrypoint `{{ entrypoint }}` - {{ argument_specs[entrypoint].short_description }}
+{% if "description" in argument_specs[entrypoint] %}
+{%- if argument_specs[entrypoint].description is string %}
+
+{{ argument_specs[entrypoint].description }}
+{% else %}
+{%- for line in argument_specs[entrypoint].description %}
+{{ line }}
+{%- endfor -%}
+{% endif -%}
+{% endif -%}
+{% if entrypoint_options[entrypoint] %}
+{%- set path, options=entrypoint_options[entrypoint][0] -%}
+{{ opt_top_level(name, options) }}
 {% else -%}
 
 This entrypoint has no options.
 
 {% endif -%}
+{%- endmacro -%}
+{% macro role_arguments_macro(argument_specs, entrypoint_options) -%}
+{% for entrypoint in argument_specs.keys() %}
+{{ entrypoint_macro(argument_specs, entrypoint, entrypoint_options) }}
 {%- endfor %}
+{%- endmacro -%}
+# Ansible Role: {{ role }}
+
+{{ metadata.galaxy_info.description }}
+
+## Requirements
+{% if metadata.galaxy_info.platforms | length > 0 %}
+| Platform | Versions |
+| -------- | -------- |
+{%- for platform in metadata.galaxy_info.platforms %}
+| {{ platform.name }} | {{ platform.versions | default([]) | join(', ') }} |
+{%- endfor %}
+{% else %}
+None.
+{% endif %}
+## Role Arguments
+{{ role_arguments_macro(argument_specs, entrypoint_options) }}
 
 ## Dependencies
 {% if ("dependencies" in metadata) and (metadata.dependencies | length > 0) %}
