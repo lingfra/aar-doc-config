@@ -4,7 +4,7 @@
 
 {{ metadata.galaxy_info.description }}
 {% include 'templates/doc/preface.md.j2' ignore missing %}
-## Requirements
+## Supported Platforms
 {% if metadata.galaxy_info.platforms | length > 0 %}
 | Platform | Versions |
 | -------- | -------- |
@@ -12,7 +12,7 @@
 | {{ platform.name }} | {{ platform.versions | default([]) | join(', ') }} |
 {%- endfor %}
 {% else %}
-None.
+Not specified.
 {% endif %}
 ## Role Arguments
 {{ args.role_arguments_macro(argument_specs, entrypoint_options) }}
