@@ -17,7 +17,7 @@ Source file (Version from 2024-10-04):
 {% macro opt_info(details) -%}
 Type: `{{ details.display_type }}`, {{ "**required**" if details.required else ("Default: `" ~ details.display_default ~ "`" if details.display_default else "optional") }}
 {%- endmacro -%}
-{% macro opt(name, details) -%}
+{% macro opt_nested(name, details) -%}
 - {{ "**" if details.required }}`{{ name }}`{{ "**" if details.required }} ({{ opt_info(details) }}).
 
 {{ details.display_description }}
@@ -33,7 +33,7 @@ Type: `{{ details.display_type }}`, {{ "**required**" if details.required else (
 **Options:**
 {%- for name, sub_details in details.options.items() %}
 
-{{ opt(name, sub_details) | indent(2) }}
+{{ opt_nested(name, sub_details) | indent(2) }}
 {%- endfor -%}
 {% endif %}
 {%- endmacro -%}
@@ -85,7 +85,7 @@ None.
 **Options:**
 {%- for name, sub_details in details.options.items() %}
 
-{{ opt(name, sub_details) | indent(2) }}
+{{ opt_nested(name, sub_details) | indent(2) }}
 {%- endfor -%}
 {% endif -%}
 {% endfor -%}
