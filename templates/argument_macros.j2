@@ -61,10 +61,6 @@ Type: `{{ details.display_type }}`, {{ "**required**" if details.required else (
 {% if entrypoint_options[entrypoint] %}
 {%- set path, options=entrypoint_options[entrypoint][0] -%}
 {{ opt_top_level(name, options) }}
-{% else -%}
-
-This entrypoint has no options.
-
 {% endif -%}
 {%- endmacro -%}
 {% macro role_arguments_macro(argument_specs, entrypoint_options) -%}
