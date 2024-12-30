@@ -15,7 +15,8 @@
 Not specified.
 {% endif %}
 ## Role Arguments
-{{ args.role_arguments_macro(argument_specs, entrypoint_options) }}
+{{- args.role_arguments_macro(argument_specs, entrypoint_options) }}
+
 ## Dependencies
 {% if ("dependencies" in metadata) and (metadata.dependencies | length > 0) %}
 {%- for dependency in metadata.dependencies %}
