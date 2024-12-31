@@ -3,6 +3,76 @@
 Repository containing configurations and templates for
 [Automated-Ansible-Role-Documentation](https://github.com/telekom-mms/Automated-Ansible-Role-Documentation).
 
+## Prerequisites
+
+[Automated-Ansible-Role-Documentation](https://github.com/telekom-mms/Automated-Ansible-Role-Documentation)
+need to be installed. Follow the install instructions on upstream.
+
+## Installation
+
+The recommended way is to add this repository as [git
+submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules) to another
+repository (which is properly an Ansible collection).
+
+1. Add as submodule:
+
+    ```bash
+    cd /path/to/your/project
+    git submodule add https://codeberg.org/lingfra/aar-doc-config.git .aar_doc
+    ```
+
+2. Add `.aar_doc.yml` and configure the template path:
+
+    ```yaml
+    ---
+    output_template: .aar_doc/templates/role.md.j2
+    ```
+
+## Usage
+
+Generate README.md for role _foo_:
+
+```bash
+aar-doc roles/foo markdown
+```
+
+Generate defaults, but overwrite the default output file name (`main.yml`) to
+`main.yaml`:
+
+```bash
+aar-doc --output-file main.yaml roles/foo defaults
+```
+
+## Custom Documentation
+
+It may be desired to add additional information to the role documentation, which
+doesn't fit into the `argument_specs.yaml` file. For this purpose the template
+optionally include two templates from the role:
+
+- `templates/doc/preface.md.j2`: Included between the top level section and the
+`Role Arguments` section. Can be used to add an elaborate description to the top
+level section or other sections that make sense to be placed before the
+arguments like _Features_, _Limitations_ or _Requirements_.
+- `templates/doc/closure.md.j2`: Included between _Example Playbook_ and
+_Project Information_ (the last section). Can be used to add more elaborate
+example playbooks and/or other documentation, which make sense to be placed at
+the end of the document.
+
+The template variables are known in the included templates, see the Jinja2
+upstream documentation on
+[Include](https://jinja.palletsprojects.com/en/stable/templates/#include) and
+[Import Context
+Behavior](https://jinja.palletsprojects.com/en/stable/templates/#import-visibility)
+for more information.
+
+Please note some hints to comply with
+[markdownlint](https://github.com/DavidAnson/markdownlint) rules
+[`MD012`](https://github.com/DavidAnson/markdownlint/blob/main/doc/md012.md) and
+[`MD022`](https://github.com/DavidAnson/markdownlint/blob/main/doc/md022.md):
+Start the custom template with **one** blank line. Avoid leading blank lines.
+The include tag in the template already creates the necessary blank line needed
+for the next heading.
+
 ## License
 
 [MIT](./LICENSE.md)
