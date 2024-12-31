@@ -1,18 +1,3 @@
-{# Template for automatic role documenation based on argument_specs file.
-
-Template is evaluated with "aar-doc - Automated Ansible Role Documentation":
-
-  https://github.com/telekom-mms/Automated-Ansible-Role-Documentation
-
-This template is a modified Version of the provided template from "telekom-mms/Automated-Ansible-Role-Documentation" (MIT License):
-
-  Copyright (c) 2022 Miika Kankare
-  Copyright (c) 2023 Sebastian Gumprich
-
-Source file (Version from 2024-10-04):
-
-  https://github.com/telekom-mms/Automated-Ansible-Role-Documentation/blob/8616eb5613a0f17f76573c6922751eb1d991286f/aar_doc/templates/markdown.j2
--#}
 <!-- BEGIN_ANSIBLE_DOCS -->
 {% macro opt_info(details) -%}
 Type: `{{ details.display_type }}`, {{ "**required**" if details.required else ("Default: `" ~ details.display_default ~ "`" if details.display_default else "optional") }}
