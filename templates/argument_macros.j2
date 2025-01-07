@@ -3,8 +3,10 @@ Type: `{{ details.display_type }}`, {{ "**required**" if details.required else (
 {%- endmacro -%}
 {% macro opt_nested(name, details) -%}
 - {{ "**" if details.required }}`{{ name }}`{{ "**" if details.required }} ({{ opt_info(details) }}).
+{%- if details.display_description is defined and details.display_description | length > 0 %}
 
 {{ details.display_description }}
+{%- endif %}
 {%- if details.choices %}
 
 **Choices:**
