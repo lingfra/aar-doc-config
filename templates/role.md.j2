@@ -25,27 +25,6 @@ Not specified.
 {%- else %}
 None.
 {%- endif %}
-
-## Example Playbook
-
-```yaml
-- hosts: all
-  tasks:
-    - name: Import role {{ role }}
-      ansible.builtin.import_role:
-        name: {{ role }}
-      vars:
-        {%- for entrypoint in argument_specs.keys() -%}
-        {% if entrypoint_options[entrypoint] %}
-        {%- set path, options=entrypoint_options[entrypoint][0] -%}
-        {%- for name, details in options.items() -%}
-        {%- if details.display_required == "yes" | default(false) %}
-        {{ name }}: # required, type: {{ details.display_type }}
-        {%- endif -%}
-        {% endfor -%}
-        {%- endif -%}
-        {% endfor %}
-```
 {% include 'templates/doc/closure.md.j2' ignore missing %}
 ## Project Information
 
