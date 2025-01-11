@@ -49,7 +49,7 @@ Type: `{{ details.display_type }}`, {{ "**required**" if details.required else (
 {% endfor -%}
 {%- endmacro -%}
 {% macro entrypoint_macro(argument_specs, entrypoint, entrypoint_options) -%}
-### Entrypoint `{{ entrypoint }}` - {{ argument_specs[entrypoint].short_description }}
+## Entrypoint `{{ entrypoint }}` - {{ argument_specs[entrypoint].short_description }}
 {% if "description" in argument_specs[entrypoint] %}
 {%- if argument_specs[entrypoint].description is string %}
 
@@ -61,8 +61,16 @@ Type: `{{ details.display_type }}`, {{ "**required**" if details.required else (
 {% endif -%}
 {% endif -%}
 {% if entrypoint_options[entrypoint] %}
+
+### Options for `{{ entrypoint }}`
 {%- set path, options=entrypoint_options[entrypoint][0] -%}
 {{ opt_top_level(name, options) }}
+{%- endif -%}
+{%- if "examples" in argument_specs[entrypoint] %}
+
+### Examples for `{{ entrypoint }}`
+
+{{ argument_specs[entrypoint].examples.rstrip() }}
 {%- endif -%}
 {%- endmacro -%}
 {% macro role_arguments_macro(argument_specs, entrypoint_options) -%}

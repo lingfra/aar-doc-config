@@ -13,8 +13,7 @@
 {%- endfor %}
 {% else %}
 Not specified.
-{% endif %}
-## Role Arguments
+{%- endif -%}
 {{- args.role_arguments_macro(argument_specs, entrypoint_options) }}
 
 ## Dependencies
