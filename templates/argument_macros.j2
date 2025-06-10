@@ -9,10 +9,7 @@ Type: `{{ details.display_type }}`, {{ "**required**" if details.required else (
 {%- endif %}
 {%- if details.choices %}
 
-**Choices:**
-{% for choice in details.choices %}
-- `{{ choice }}`
-{%- endfor -%}
+*Choices:* `{{ details.choices | join('`, `') -}}`
 {% endif %}
 {%- if details.options %}
 
@@ -33,10 +30,7 @@ Type: `{{ details.display_type }}`, {{ "**required**" if details.required else (
 {{ details.display_description }}
 {%- if details.choices %}
 
-**Choices:**
-{% for choice in details.choices %}
-- `{{ choice }}`
-{%- endfor -%}
+*Choices:* `{{ details.choices | join('`, `') -}}`
 {% endif -%}
 {%- if details.options %}
 
