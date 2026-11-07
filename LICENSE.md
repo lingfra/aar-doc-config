@@ -2,7 +2,7 @@ MIT License
 
 Copyright (c) 2022 [Miika Kankare](https://github.com/quulah)  
 Copyright (c) 2023 [Sebastian Gumprich](https://github.com/rndmh3ro)  
-Copyright (c) 2024 [lingling](https://codeberg.org/lingling)  
+Copyright (c) 2024 Stella Kemmerling  
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
