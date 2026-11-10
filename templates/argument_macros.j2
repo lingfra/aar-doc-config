@@ -1,65 +1,52 @@
+{#- display_type and display_default are already formatted by aar-doc (>= 2.4).
+    Only plain types like `str` come without a code span. -#}
 {% macro opt_info(details) -%}
-Type: `{{ details.display_type }}`, {{ "**required**" if details.required else ("Default: `" ~ details.display_default ~ "`" if details.display_default else "optional") }}
+{%- set type = details.display_type -%}
+Type: {{ type if "`" in type else "`" ~ type ~ "`" }}, {{ "**required**" if details.required else ("Default: " ~ details.display_default if details.display_default else "optional") }}
 {%- endmacro -%}
-{% macro opt_nested(name, details) -%}
-- {{ "**" if details.required }}`{{ name }}`{{ "**" if details.required }} ({{ opt_info(details) }}).
-{%- if details.display_description is defined and details.display_description | length > 0 %}
+{% macro opt_details(details) -%}
+{%- if details.display_description %}
 
-{{ details.display_description }}
+{{ details.display_description | ansible_doc_markup }}
 {%- endif %}
 {%- if details.choices %}
 
-*Choices:* `{{ details.choices | join('`, `') -}}`
-{% endif %}
-{%- if details.options %}
-
-**Options:**
-{%- for name, sub_details in details.options.items() %}
-
-{{ opt_nested(name, sub_details) | indent(2) }}
-{%- endfor -%}
-{% endif %}
+*Choices:* `{{ details.choices | join('`, `') }}`
+{%- endif %}
 {%- endmacro -%}
-{% macro opt_top_level(name, options) -%}
-{% for name, details in options.items() %}
-
+{% macro opt_top_level(name, details) -%}
 #### `{{ name }}`
 
 {{ opt_info(details) }}.
-
-{{ details.display_description }}
-{%- if details.choices %}
-
-*Choices:* `{{ details.choices | join('`, `') -}}`
-{% endif -%}
-{%- if details.options %}
-
-**Options:**
-{%- for name, sub_details in details.options.items() %}
-
-{{ opt_nested(name, sub_details) | indent(2) }}
-{%- endfor -%}
-{% endif -%}
-{% endfor -%}
+{{- opt_details(details) }}
 {%- endmacro -%}
+{% macro opt_nested(name, details) -%}
+- {{ "**" if details.required }}`{{ name }}`{{ "**" if details.required }} ({{ opt_info(details) }}).
+{{- opt_details(details) | indent(2) }}
+{%- endmacro -%}
+{#- Each group of suboptions gets its own section. The heading matches the
+    anchor aar-doc links to in display_type, e.g.
+    "Options for `main` > `foo`" -> #options-for-main--foo -#}
 {% macro entrypoint_macro(argument_specs, entrypoint, entrypoint_options) -%}
-## Entrypoint `{{ entrypoint }}` - {{ argument_specs[entrypoint].short_description }}
+## Entrypoint `{{ entrypoint }}` - {{ argument_specs[entrypoint].short_description | ansible_doc_markup }}
 {% if "description" in argument_specs[entrypoint] %}
 {%- if argument_specs[entrypoint].description is string %}
 
-{{ argument_specs[entrypoint].description }}
+{{ argument_specs[entrypoint].description | ansible_doc_markup }}
 {% else %}
 {%- for line in argument_specs[entrypoint].description %}
-{{ line }}
+{{ line | ansible_doc_markup }}
 {%- endfor -%}
 {% endif -%}
 {% endif -%}
-{% if entrypoint_options[entrypoint] %}
+{%- for path, options in entrypoint_options[entrypoint] %}
 
-### Options for `{{ entrypoint }}`
-{%- set path, options=entrypoint_options[entrypoint][0] -%}
-{{ opt_top_level(name, options) }}
-{%- endif -%}
+### Options for `{{ path | join("` > `") }}`
+{%- for name, details in options.items() %}
+
+{{ opt_top_level(name, details) if path | length == 1 else opt_nested(name, details) }}
+{%- endfor %}
+{%- endfor %}
 {%- if "examples" in argument_specs[entrypoint] %}
 
 ### Examples for `{{ entrypoint }}`

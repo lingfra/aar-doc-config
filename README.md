@@ -6,7 +6,8 @@ Repository containing configurations and templates for
 ## Prerequisites
 
 [Automated-Ansible-Role-Documentation](https://github.com/telekom-mms/Automated-Ansible-Role-Documentation)
-need to be installed. Follow the install instructions on upstream.
+need to be installed in version 2.4 or newer. Follow the install instructions on
+upstream.
 
 ## Installation
 
