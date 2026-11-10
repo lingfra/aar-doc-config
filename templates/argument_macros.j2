@@ -11,7 +11,7 @@ Type: {{ type if "`" in type else "`" ~ type ~ "`" }}, {{ "**required**" if deta
 {%- endif %}
 {%- if details.choices %}
 
-*Choices:* `{{ details.choices | join('`, `') }}`
+_Choices:_ `{{ details.choices | join('`, `') }}`
 {%- endif %}
 {%- endmacro -%}
 {% macro opt_top_level(name, details) -%}
